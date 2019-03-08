@@ -21,6 +21,10 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -39,11 +43,37 @@ public class DateFormatUtil {
                         }
                     });
 
+    private final static LoadingCache<String, DateTimeFormatter> LOAD_CACHE_1 =
+            CacheBuilder.newBuilder()
+                    .maximumSize(5)
+                    .build(new CacheLoader<String, DateTimeFormatter>() {
+                        @Override
+                        public DateTimeFormatter load(String pattern) {
+                            return DateTimeFormatter.ofPattern(pattern);
+                        }
+                    });
+
     public static Date parse(String pattern, String value) throws ExecutionException, ParseException {
         return LOAD_CACHE.get(pattern).parse(value);
     }
 
     public static String format(String pattern, Date value) throws ExecutionException {
         return LOAD_CACHE.get(pattern).format(value);
+    }
+
+    public static LocalDateTime parseLocalDateTime(String pattern, String value) throws ExecutionException {
+        return LocalDateTime.parse(value,LOAD_CACHE_1.get(pattern));
+    }
+
+    public static String formateLocalDateTime(String pattern,LocalDateTime value) throws ExecutionException {
+        return value.format(LOAD_CACHE_1.get(pattern));
+    }
+
+    public static LocalDate parseLocalDate(String pattern, String value) throws ExecutionException {
+        return LocalDate.parse(value,LOAD_CACHE_1.get(pattern));
+    }
+
+    public static String formateLocalDate(String pattern,LocalDate value) throws ExecutionException {
+        return value.format(LOAD_CACHE_1.get(pattern));
     }
 }

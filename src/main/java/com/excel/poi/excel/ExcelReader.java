@@ -18,6 +18,8 @@ package com.excel.poi.excel;
 
 import com.excel.poi.common.Constant;
 import static com.excel.poi.common.DateFormatUtil.parse;
+import static com.excel.poi.common.DateFormatUtil.parseLocalDateTime;
+import static com.excel.poi.common.DateFormatUtil.parseLocalDate;
 import static com.excel.poi.common.RegexUtil.isMatch;
 import com.excel.poi.common.StringUtil;
 import static com.excel.poi.common.StringUtil.convertNullTOZERO;
@@ -32,6 +34,8 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -315,6 +319,18 @@ public class ExcelReader extends DefaultHandler {
             if (!StringUtil.isBlank(cellValue)) {
                 cellValue = parse(mappingProperty.getDateFormat(), cellValue.toString());
             } else {
+                cellValue = null;
+            }
+        } else if(filedClazz == LocalDateTime.class){
+             if(!StringUtil.isBlank(cellValue)){
+                cellValue = parseLocalDateTime(mappingProperty.getDateFormat(),cellValue.toString());
+             }else{
+                 cellValue = null;
+             }
+        } else if(filedClazz == LocalDate.class){
+            if(!StringUtil.isBlank(cellValue)){
+                cellValue = parseLocalDate(mappingProperty.getDateFormat(),cellValue.toString());
+            }else{
                 cellValue = null;
             }
         } else if (filedClazz == Short.class || filedClazz == short.class) {

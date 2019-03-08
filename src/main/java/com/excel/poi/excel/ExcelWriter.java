@@ -23,6 +23,8 @@ import static com.excel.poi.common.Constant.CHINESES_ATUO_SIZE_COLUMN_WIDTH_MAX;
 import static com.excel.poi.common.Constant.CHINESES_ATUO_SIZE_COLUMN_WIDTH_MIN;
 import static com.excel.poi.common.Constant.MAX_RECORD_COUNT_PEER_SHEET;
 import static com.excel.poi.common.DateFormatUtil.format;
+import static com.excel.poi.common.DateFormatUtil.formateLocalDateTime;
+import static com.excel.poi.common.DateFormatUtil.formateLocalDate;
 import com.excel.poi.common.StringUtil;
 import com.excel.poi.entity.ExcelEntity;
 import com.excel.poi.entity.ExcelPropertyEntity;
@@ -31,6 +33,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -309,6 +313,10 @@ public class ExcelWriter {
             }
         } else if (cellValue instanceof Date) {
             cell.setCellValue(format(property.getDateFormat(), (Date) cellValue));
+        } else if (cellValue instanceof LocalDateTime){
+            cell.setCellValue(formateLocalDateTime(property.getDateFormat(),(LocalDateTime) cellValue));
+        } else if (cellValue instanceof LocalDate){
+            cell.setCellValue(formateLocalDate(property.getDateFormat(),(LocalDate) cellValue));
         } else {
             cell.setCellValue(cellValue.toString());
         }
